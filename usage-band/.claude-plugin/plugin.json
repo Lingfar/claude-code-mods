@@ -1,0 +1,9 @@
+{
+  "name": "usage-band",
+  "version": "0.1.0",
+  "description": "Always-visible plan usage limits in the prompt footer",
+  "author": {
+    "name": "Lingfar"
+  },
+  "types": "./types/index.d.ts"
+}

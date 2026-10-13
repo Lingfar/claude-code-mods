@@ -201,6 +201,7 @@ export const register: Register = on => {
         children.push(
           <Box
             key={`row-${row.id}`}
+            width="100%"
             flexDirection="row"
             justifyContent="space-between"
             columnGap={2}
@@ -209,7 +210,7 @@ export const register: Register = on => {
             borderColor={isDesktop ? CARD_TINT : 'inactive'}
             backgroundColor={isDesktop ? CARD_TINT : undefined}
           >
-            <Box flexDirection="column" flexShrink={1}>
+            <Box flexDirection="column" flexGrow={1} flexShrink={1} minWidth={0} overflow="hidden">
               <Text wrap="truncate-end">{row.label}</Text>
               <Text dimColor wrap="truncate-end">
                 {`${KIND_TITLES[open]}   ${formatElapsed(nowMs - row.startedAt)}`}
@@ -225,7 +226,7 @@ export const register: Register = on => {
     }
 
     return (
-      <Box key="tasks" flexDirection="column" rowGap={isDesktop ? 1 : 0}>
+      <Box key="tasks" width="100%" flexDirection="column" rowGap={isDesktop ? 1 : 0}>
         {children}
       </Box>
     )

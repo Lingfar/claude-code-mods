@@ -1,0 +1,19 @@
+{
+  "name": "claude-code-mods",
+  "owner": {
+    "name": "Lingfar"
+  },
+  "description": "Claude Code mods for the desktop Code tab: plan usage footer and background tasks band",
+  "plugins": [
+    {
+      "name": "usage-band",
+      "source": "./usage-band",
+      "description": "Always-visible plan usage limits in the prompt footer"
+    },
+    {
+      "name": "tasks-band",
+      "source": "./tasks-band",
+      "description": "Running background shells, agents and monitors in a band above the prompt"
+    }
+  ]
+}

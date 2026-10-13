@@ -10,7 +10,7 @@ const now = atom({ plugin: 'usage-band', key: 'now' } as const, 0)
 
 const PERCENT_COLORS = { normal: undefined, warning: 'warning', error: 'error' } as const
 const RING_COLORS = { normal: 'success', warning: 'warning', error: 'error' } as const
-const SEPARATORS = { desktop: '\u2003', terminal: '  ', vscode: '  ', mobile: '  ' } as const
+const SEPARATOR = ' │ '
 
 async function refreshNow($: EngineInterface): Promise<void> {
   const nowMs = await $.clock.now()
@@ -62,7 +62,7 @@ export const register: Register = on => {
     const { Box, Text } = $.ui.resolve(e)
 
     const segments = gauges.map(gauge => [
-      <Text dimColor>{`${gauge.label} `}</Text>,
+      <Text>{`${gauge.label} `}</Text>,
       <Text color={RING_COLORS[gauge.level]}>{`${ringGlyph(gauge.percent)} `}</Text>,
       <Text bold color={PERCENT_COLORS[gauge.level]}>{`${gauge.percent}%`}</Text>,
       ...(gauge.detail === undefined ? [] : [<Text dimColor>{` ${gauge.detail}`}</Text>]),
@@ -74,7 +74,7 @@ export const register: Register = on => {
 
     return (
       <Box key="usage" flexDirection="row" flexShrink={0}>
-        <Text wrap="end">{segments.flatMap((segment, index) => (index === 0 ? segment : [<Text>{SEPARATORS[e.surface]}</Text>, ...segment]))}</Text>
+        <Text wrap="end">{segments.flatMap((segment, index) => (index === 0 ? segment : [<Text dimColor>{SEPARATOR}</Text>, ...segment]))}</Text>
       </Box>
     )
   })

@@ -4,7 +4,7 @@ Two small [Claude Code](https://claude.com/claude-code) mods, made for the deskt
 
 | Mod | What it shows |
 | --- | --- |
-| `usage-band` | Your plan limits in the prompt footer: `5h ◔ 23% ↻2h13   7j ◕ 91% ↻3j` (orange from 75 %, red from 90 %). |
+| `usage-band` | Your plan limits in the prompt footer: `5h ◔ 23% ↻2h13 │ 7j ◕ 91% ↻3j` (orange from 75 %, red from 90 %). |
 | `tasks-band` | Background shells, agents, monitors and workflows in a band above the prompt: `Running   2 shells ▸   1 agent ▸`. Click a count to unfold one card per task (title, type, elapsed time) with a ▢ button to stop it. Hidden when nothing runs. |
 
 ## Install

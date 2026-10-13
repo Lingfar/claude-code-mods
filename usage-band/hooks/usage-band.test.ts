@@ -43,7 +43,7 @@ for (const surface of ['terminal', 'desktop'] as const) {
 
     expect(drawn).toContain('◔')
 
-    for (const text of ['5h', '23%', '↻2h13', '7j', '91%', '↻3j', 'focus']) {
+    for (const text of ['5h', '23%', '↻2h13', ' │ ', '7j', '91%', '↻3j', 'focus']) {
       expect(drawn).toContain(text)
     }
   })

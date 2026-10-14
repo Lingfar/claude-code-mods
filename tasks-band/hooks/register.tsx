@@ -11,6 +11,7 @@ const expanded = atom({ plugin: 'tasks-band', key: 'expanded' } as const, null)
 const now = atom({ plugin: 'tasks-band', key: 'now' } as const, 0)
 
 const LIVE_AGENT_STATUSES = new Set(['pending', 'running', 'waiting'])
+const GONE_TASK = /no task found|not running|not found/i
 const CARD_TINT = 'rgba(128, 128, 128, 0.12)'
 
 async function refreshAgents($: EngineInterface): Promise<void> {
@@ -71,9 +72,13 @@ async function stopTask($: EngineInterface, id: string): Promise<void> {
   const stopped = await $.tool.call({ tool: 'TaskStop', task_id: id })
 
   if (stopped.deny !== undefined || stopped.isError === true) {
-    $.ui.toast(`Arrêt impossible : ${stopped.deny ?? stopped.text ?? id}`)
+    const reason = stopped.deny ?? stopped.text ?? JSON.stringify(stopped.result ?? '')
 
-    return
+    if (!GONE_TASK.test(reason)) {
+      $.ui.toast(`Arrêt impossible : ${reason}`)
+
+      return
+    }
   }
 
   await untrackTasks($, [id])
@@ -150,6 +155,13 @@ export const register: Register = on => {
       await untrackTasks($, endedTaskIds(e.text))
       await refreshAgents($)
     }
+
+    return next(e)
+  }).catch(($, e, next) => next(e))
+
+  on('prompt.attachment', { type: 'queued_command' }, async ($, e, next) => {
+    await untrackTasks($, endedTaskIds(e.text))
+    await refreshAgents($)
 
     return next(e)
   }).catch(($, e, next) => next(e))

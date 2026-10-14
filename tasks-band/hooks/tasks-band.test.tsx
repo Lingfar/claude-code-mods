@@ -142,3 +142,37 @@ for (const surface of ['terminal', 'desktop'] as const) {
     expect(afterStop).toContain('agent')
   })
 }
+
+test('drops a shell whose end is delivered into a running turn, and a card whose task is already gone', async ($, on) => {
+  let shellCount = 0
+
+  mock.clock(on, { now: NOW })
+  on('agent.list', () => ({ value: [] }))
+  on('tool.call', { tool: 'Bash' }, () => {
+    shellCount += 1
+
+    return { result: { stdout: '', stderr: '', interrupted: false, backgroundTaskId: `b${shellCount}` } }
+  })
+  on('tool.call', { tool: 'TaskStop' }, ($, e) => ({ isError: true, result: `No task found with ID: ${e.task_id ?? ''}` }))
+  on('prompt.attachment', ($, e) => ({ text: e.text }))
+  on('ui.render', ($, e) => {
+    const { Text } = $.ui.resolve(e)
+
+    return <Text>engine</Text>
+  })
+
+  await $.tool.call({ tool: 'Bash', command: 'npm test', run_in_background: true })
+  await $.tool.call({ tool: 'Bash', command: 'npm run dev', run_in_background: true })
+
+  const ui = await $.ui.mount({ plugin: 'tasks-band', surface: 'desktop', component: 'AbovePrompt', props: BAND_PROPS })
+
+  await ui.press({ key: 'shell' })
+  await $.prompt.attachment({ type: 'queued_command', text: NOTIFICATIONS, origin: { kind: 'engine' } })
+
+  expect(await ui.find({ key: 'row-b1' })).toBeUndefined()
+  expect(await ui.find({ key: 'row-b2' })).toBeDefined()
+
+  await ui.press({ key: 'stop-b2' })
+
+  expect(JSON.stringify(await ui.drawn())).not.toContain('shell')
+})

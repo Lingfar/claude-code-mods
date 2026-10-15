@@ -1,9 +1,0 @@
-{
-  "name": "tasks-band",
-  "version": "0.1.0",
-  "description": "Running background shells, agents and monitors in a band above the prompt",
-  "author": {
-    "name": "Lingfar"
-  },
-  "types": "./types/index.d.ts"
-}
